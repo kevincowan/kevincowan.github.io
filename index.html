@@ -1,10 +1,109 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Kevin Cowan</title>
+<meta name="description" content="Kevin Cowan's personal site.">
+<meta name="theme-color" content="#05060a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05060a; --panel:#0b0e16; --grid:rgba(0,240,255,.22);
+  --cyan:#00f0ff; --magenta:#ff2bd6; --yellow:#f5ff3b;
+  --ink:#e6f1ff; --muted:#7c8aa5; --line:#1c2335;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  --display:"Space Grotesk",system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{height:100%}
+body{
+  margin:0;min-height:100%;
+  background:var(--bg);color:var(--ink);font-family:var(--mono);
+  display:flex;flex-direction:column;overflow-x:hidden;
+  padding:env(safe-area-inset-top,0px) 0 env(safe-area-inset-bottom,0px);
+}
+/* perspective grid floor */
+body::before{
+  content:"";position:fixed;left:-50%;right:-50%;bottom:0;height:70vh;z-index:-2;
+  background:
+    linear-gradient(var(--grid) 1px,transparent 1px) 0 0/48px 48px,
+    linear-gradient(90deg,var(--grid) 1px,transparent 1px) 0 0/48px 48px;
+  transform:perspective(600px) rotateX(55deg);transform-origin:bottom;
+  mask-image:linear-gradient(to top,#000 30%,transparent 100%);
+  -webkit-mask-image:linear-gradient(to top,#000 30%,transparent 100%);
+  animation:drift 6s linear infinite;
+}
+@keyframes drift{to{background-position:0 48px,0 0}}
+/* scanlines + glow */
+body::after{
+  content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;
+  background:
+    repeating-linear-gradient(to bottom,rgba(255,255,255,.025) 0 1px,transparent 1px 3px),
+    radial-gradient(ellipse at 15% 0%,rgba(255,43,214,.16),transparent 55%),
+    radial-gradient(ellipse at 90% 20%,rgba(0,240,255,.12),transparent 50%);
+}
+main{flex:1;width:100%;max-width:44rem;margin:0 auto;padding:clamp(3rem,14vh,8rem) 16px 3rem}
+.boot{color:var(--muted);font-size:.85rem;margin:0 0 1.2rem}
+.boot b{color:var(--cyan);font-weight:400}
+.cursor{display:inline-block;width:.6em;height:1.1em;vertical-align:-.15em;background:var(--cyan);margin-left:.2em;animation:blink 1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+h1{
+  position:relative;font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(2.6rem,13vw,5.2rem);line-height:.95;letter-spacing:-.02em;margin:0 0 1rem;
+  text-shadow:0 0 18px rgba(0,240,255,.35);
+}
+h1::before,h1::after{content:attr(data-text);content:attr(data-text) / "";position:absolute;inset:0;pointer-events:none;opacity:0}
+h1::before{color:var(--magenta);clip-path:inset(0 0 60% 0);animation:glitch 4s infinite steps(1)}
+h1::after{color:var(--cyan);clip-path:inset(55% 0 0 0);animation:glitch 3.3s infinite steps(1) reverse}
+@keyframes glitch{
+  0%,88%,100%{transform:translate(0,0);opacity:0}
+  90%{transform:translate(-4px,1px);opacity:.9}
+  93%{transform:translate(3px,-1px);opacity:.9}
+  96%{transform:translate(-1px,0);opacity:.9}
+}
+.lede{color:var(--muted);font-size:.95rem;line-height:1.6;margin:0 0 3.5rem}
+.lede span{color:var(--magenta)}
+h2{font-size:.8rem;font-weight:400;letter-spacing:.2em;text-transform:uppercase;color:var(--yellow);margin:0 0 1rem}
+h2::before{content:"// "}
+.project{
+  position:relative;display:grid;grid-template-columns:1fr auto;gap:.4rem 1rem;align-items:center;
+  text-decoration:none;color:inherit;background:var(--panel);
+  border:1px solid var(--line);padding:1.2rem 1.3rem;
+  clip-path:polygon(0 0,calc(100% - 16px) 0,100% 16px,100% 100%,16px 100%,0 calc(100% - 16px));
+  transition:border-color .2s,box-shadow .2s,transform .2s;
+}
+.project::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:linear-gradient(var(--cyan),var(--magenta))}
+.project:hover{border-color:var(--cyan);box-shadow:0 0 24px rgba(0,240,255,.18),inset 0 0 24px rgba(0,240,255,.05);transform:translateY(-2px)}
+.project:focus-visible{outline:2px solid var(--yellow);outline-offset:3px}
+.tag{grid-column:1/-1;font-size:.72rem;letter-spacing:.15em;text-transform:uppercase;color:var(--cyan)}
+.project h3{font-family:var(--display);font-weight:500;font-size:1.35rem;margin:0}
+.project p{grid-column:1/-1;margin:0;color:var(--muted);font-size:.88rem;line-height:1.6}
+.go{grid-row:2;grid-column:2;color:var(--magenta);font-size:1.2rem;transition:transform .2s}
+.project:hover .go{transform:translateX(4px)}
+footer{display:flex;justify-content:space-between;gap:1rem;max-width:44rem;width:100%;margin:0 auto;padding:1.5rem 16px;font-size:.75rem;color:var(--muted)}
+footer .ok{color:#3dff9a}
+@media (prefers-reduced-motion:reduce){
+  body::before,.cursor,h1::before,h1::after{animation:none}
+}
+</style>
+</head>
 <body>
+<main>
+  <p class="boot">&gt; <b>whoami</b><span class="cursor" aria-hidden="true"></span></p>
+  <h1 data-text="Kevin Cowan">Kevin Cowan</h1>
+  <p class="lede">A few things I've made<span>.</span></p>
 
-<h1>www.kevincowan.com</h1>
-
-<p></p>
-
+  <h2>Projects</h2>
+  <a class="project" href="/island-in-light/">
+    <span class="tag">01 / interactive map</span>
+    <h3>The island, drawn in light</h3>
+    <span class="go" aria-hidden="true">-&gt;</span>
+    <p>Ireland's lighthouses, each flashing its real signature, the way a navigator sees them at night.</p>
+  </a>
+</main>
+<footer><span>kevincowan.com</span><span><span class="ok">&#9679;</span> online</span></footer>
 </body>
 </html>
